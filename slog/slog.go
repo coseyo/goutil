@@ -6,6 +6,10 @@ import (
 	"time"
 )
 
+var (
+	LogPrefix string = "/data/logs/apps"
+)
+
 func LogToFile(filename string, v ...interface{}) error {
 
 	f, err := os.OpenFile(filename, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0644)
@@ -24,7 +28,7 @@ func LogToFile(filename string, v ...interface{}) error {
 
 func SimpleLog(app string, v ...interface{}) error {
 
-	logDir := fmt.Sprintf("/data/logs/apps/%s", app)
+	logDir := fmt.Sprintf("%s/%s", LogPrefix, app)
 	exsit, err := exists(logDir)
 	if err != nil {
 		return err
