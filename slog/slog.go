@@ -3,11 +3,13 @@ package slog
 import (
 	"fmt"
 	"os"
+	"sync"
 	"time"
 )
 
 var (
 	LogPrefix string = "/data/logs/apps"
+	mu        sync.Mutex
 )
 
 func LogToFile(filename string, v ...interface{}) error {
@@ -27,7 +29,8 @@ func LogToFile(filename string, v ...interface{}) error {
 }
 
 func SimpleLog(app string, v ...interface{}) error {
-
+	mu.Lock()
+	defer mu.Unlock()
 	logDir := fmt.Sprintf("%s/%s", LogPrefix, app)
 	exsit, err := exists(logDir)
 	if err != nil {
