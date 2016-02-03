@@ -2,9 +2,11 @@ package sortmap
 
 import (
 	"crypto/md5"
+	"encoding/hex"
 	"fmt"
 	"reflect"
 	"sort"
+	"strings"
 )
 
 type sortMap struct {
@@ -43,7 +45,7 @@ func (this SortMaps) Sort(params map[string]interface{}) SortMaps {
 	return this
 }
 
-func MapToMD5(params map[string]interface{}) []byte {
+func MapToMD5(params map[string]interface{}) (b []byte) {
 
 	smStruct := &SortMaps{}
 	sm := smStruct.Sort(params)
@@ -55,5 +57,12 @@ func MapToMD5(params map[string]interface{}) []byte {
 
 	ctMd5 := md5.New()
 	ctMd5.Write([]byte(s))
-	return ctMd5.Sum(nil)
+	src := ctMd5.Sum(nil)
+	b = make([]byte, hex.EncodedLen(len(src)))
+	hex.Encode(b, src)
+	return
+}
+
+func MapToMD5String(params map[string]interface{}) string {
+	return strings.ToLower(string(MapToMD5(params)))
 }
