@@ -56,5 +56,4 @@ func MapToMD5(params map[string]interface{}) []byte {
 	ctMd5 := md5.New()
 	ctMd5.Write([]byte(s))
 	return ctMd5.Sum(nil)
-
 }
