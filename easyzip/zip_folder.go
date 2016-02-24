@@ -7,6 +7,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"golang.org/x/text/encoding/simplifiedchinese"
 )
 
 const (
@@ -70,6 +72,9 @@ func (z *zipper) zipFile(path string, f os.FileInfo, err error) error {
 	defer file.Close()
 	// create new file in zip
 	fileName := strings.TrimPrefix(path, z.srcParentFolder)
+	if fileName, err = utf8ToGBK(fileName); err != nil {
+		return err
+	}
 
 	w, err := z.writer.Create(fileName)
 	if err != nil {
@@ -103,6 +108,16 @@ func (z *zipper) zipFolder() error {
 		return err
 	}
 	return nil
+}
+
+func utf8ToGBK(text string) (string, error) {
+	dst := make([]byte, len(text)*2)
+	tr := simplifiedchinese.GB18030.NewEncoder()
+	nDst, _, err := tr.Transform(dst, []byte(text), true)
+	if err != nil {
+		return text, err
+	}
+	return string(dst[:nDst]), nil
 }
 
 // ZipFolder zips the given folder to the a zip file
