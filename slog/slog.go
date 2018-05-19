@@ -42,7 +42,7 @@ func SimpleLog(app string, v ...interface{}) error {
 		}
 	}
 
-	filename := fmt.Sprintf("%s/%s_%s.txt", logDir, app, time.Now().Format("2006-01-02"))
+	filename := fmt.Sprintf("%s/%s_%s.log", logDir, app, time.Now().Format("2006-01-02"))
 
 	if err := LogToFile(filename, v); err != nil {
 		return err
